@@ -71,7 +71,7 @@ VALUES
 
 -- QUESTION 1: What is the total amount each customer spent at the restaurant?
 SELECT s.customer_id,
-	   SUM(m.price) AS total_amount_spent
+	   concat('$ ',SUM(m.price)) AS total_amount_spent
 FROM sales AS s
      INNER JOIN menu m 
      USING(product_id)
@@ -80,7 +80,7 @@ ORDER BY total_amount_spent DESC;
 
 -- QUESTION 2: How many days has each customer visited the restaurant?
 SELECT customer_id,
-	   COUNT(DISTINCT order_date) AS number_of_days
+	   CONCAT(COUNT(DISTINCT order_date), ' days') AS number_of_days
 FROM sales
 GROUP BY customer_id
 ORDER BY number_of_days DESC;
@@ -186,7 +186,8 @@ WHERE ranks = 1
 ORDER BY customer_id;
 
 
--- QUESTION 8: What is the total items and amount spent for each member before they became a member?
+-- QUESTION 8: What is the total items and amount spent for each member 
+-- before they became a member?
 
 WITH previous_sales AS(
 	SELECT s.customer_id,
@@ -294,4 +295,4 @@ SELECT *,
 	   CASE WHEN member = 'Y' THEN 
        RANK() OVER(PARTITION BY customer_id, member ORDER BY order_date)
        END AS ranking
-FROM updated_customers
+FROM updated_customers -- temporary table created in the previous table
